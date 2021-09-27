@@ -8,3 +8,4 @@ Continuation of [Um](https://github.com/Sundown/Bias), including changes which j
  - [ ] Shift implementation to ANSI C.
  - [ ] Generate parser using Treesitter or Owl to increase performance and enable syntax improvments.
  - [ ] Debug codebase and fix memory leakage.
+ - [ ] Add tests.
