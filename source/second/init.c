@@ -121,6 +121,7 @@ void um_init() {
 	add_builtin("__builtin_format_hex", builtin_hex);
 	add_builtin("__builtin_format_precision", builtin_precision);
 	add_builtin("import", builtin_import);
+	add_builtin("vec_append", builtin_append);
 
 	add_builtin("__builtin_format_upper", builtin_upper);
 	add_builtin("__builtin_format_lower", builtin_lower);
@@ -137,6 +138,7 @@ void um_init() {
 	add_builtin("defun", new_builtin(NULL).value.builtin);
 	add_builtin("quote", new_builtin(NULL).value.builtin);
 	add_builtin("lambda", new_builtin(NULL).value.builtin);
+
 
 	ingest("\
 (defun compose (f g)\

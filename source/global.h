@@ -328,5 +328,6 @@ um_Error builtin_hex(um_Vector* v_params, um_Noun* result);
 um_Error builtin_precision(um_Vector* v_params, um_Noun* result);
 um_Error builtin_upper(um_Vector* v_params, um_Noun* result);
 um_Error builtin_lower(um_Vector* v_params, um_Noun* result);
+um_Error builtin_append(um_Vector* v_params, um_Noun* result);
 
 #endif

@@ -10,16 +10,14 @@ um_Vector* vector_new(void) {
 }
 
 void vector_add(um_Vector* a, um_Noun item) {
-	if (a->size + 1 > a->capacity) {
+	if (a->size + 2 > a->capacity) {
 		a->capacity *= VECTOR_GROWTH_FACTOR;
 		if (a->data == a->static_data) {
-			a->data
-			    = (um_Noun*)calloc(a->capacity, sizeof(um_Noun));
-			memcpy(
-			    a->data, a->static_data, a->size * sizeof(um_Noun));
+			a->data = (um_Noun*)calloc(a->capacity, sizeof(um_Noun));
+
+			memcpy(a->data, a->static_data, a->size * sizeof(um_Noun));
 		} else {
-			a->data = (um_Noun*)realloc(
-			    a->data, a->capacity * sizeof(um_Noun));
+			a->data = (um_Noun*)realloc(a->data, a->capacity * sizeof(um_Noun));
 		}
 	}
 
@@ -32,12 +30,16 @@ void vector_clear(um_Vector* a) {
 }
 
 void vector_free(um_Vector* a) {
-	if (a->data != a->static_data) free(a->data);
+	if (a->data != a->static_data) {
+		free(a->data);
+	}
 }
 
 um_Vector* noun_to_vector(um_Noun a) {
 	um_Vector* v = vector_new();
-	for (; !isnil(a); a = cdr(a)) { vector_add(v, car(a)); }
+	for (; !isnil(a); a = cdr(a)) {
+		vector_add(v, car(a));
+	}
 
 	return v;
 }

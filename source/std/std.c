@@ -287,6 +287,17 @@ um_Error builtin_string(um_Vector* v_params, um_Noun* result) {
 	return MakeErrorCode(OK);
 }
 
+um_Error builtin_append(um_Vector* v_params, um_Noun* result) {
+	if(v_params->data[0].type != vector_t) {
+		return MakeErrorCode(ERROR_TYPE);
+	}
+
+	vector_add(v_params->data[0].value.vector_v, v_params->data[1]);
+
+	*result = v_params->data[0];
+	return MakeErrorCode(OK);
+}
+
 um_Error builtin_print(um_Vector* v_params, um_Noun* result) {
 	size_t i;
 	for (i = 0; i < v_params->size; i++) {

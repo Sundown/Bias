@@ -2,7 +2,6 @@
 
 bool do_repl = false;
 
-
 int main(int argc, char** argv) {
 	char* file_name = NULL;
 	um_init();
