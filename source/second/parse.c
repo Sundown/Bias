@@ -468,8 +468,8 @@ um_Error read_block(const char* start, const char** end, um_Noun* result) {
 
 um_Error read_vector(const char* start, const char** end, um_Noun* result) {
 	*result = nil;
-	um_Vector* v = calloc(1, sizeof(um_Vector));
-	vector_new(v);
+	um_Vector* v = vector_new();
+
 	*end = start;
 
 	while (1) {
@@ -708,7 +708,7 @@ um_Error eval_expr(um_Noun expr, um_Noun env, um_Noun* result) {
 	um_Error err;
 	um_Noun fn, op, cond, args, sym, val, name, macro, p, r, arg_names;
 	size_t ss = stack_size;
-	um_Vector v_params;
+	um_Vector* v_params;
 start:
 	stack_add(env);
 	cur_expr = isnil(expr) ? cur_expr : expr;
@@ -1122,17 +1122,17 @@ start:
 			return err;
 		}
 
-		vector_new(&v_params);
+		v_params = vector_new();
 		p = args;
 		while (!isnil(p)) {
 			err = eval_expr(car(p), env, &r);
 			if (err._) {
-				vector_free(&v_params);
+				vector_free(v_params);
 				stack_restore(ss);
 				return err;
 			}
 
-			vector_add(&v_params, r);
+			vector_add(v_params, r);
 			p = cdr(p);
 		}
 
@@ -1141,14 +1141,14 @@ start:
 			env = env_create(car(fn), list_len(arg_names));
 			expr = car(cdr(cdr(fn)));
 
-			err = env_bind(env, arg_names, &v_params);
+			err = env_bind(env, arg_names, v_params);
 			if (err._) { return err; }
 
-			vector_free(&v_params);
+			vector_free(v_params);
 			goto start;
 		} else {
-			err = apply(fn, &v_params, result);
-			vector_free(&v_params);
+			err = apply(fn, v_params, result);
+			vector_free(v_params);
 		}
 
 		stack_restore_add(ss, *result);
@@ -1354,7 +1354,7 @@ start:
 um_Error macex(um_Noun expr, um_Noun* result) {
 	um_Error err = MakeErrorCode(OK);
 	um_Noun args, op, result2;
-	um_Vector v_params;
+	um_Vector* v_params;
 	int ss;
 	cur_expr = expr;
 
@@ -1381,22 +1381,22 @@ um_Error macex(um_Noun expr, um_Noun* result) {
 
 			op.type = closure_t;
 
-			noun_to_vector(args, &v_params);
-			err = apply(op, &v_params, &result2);
+			v_params = noun_to_vector(args);
+			err = apply(op, v_params, &result2);
 			if (err._) {
-				vector_free(&v_params);
+				vector_free(v_params);
 				stack_restore(ss);
 				return err;
 			}
 
 			err = macex(result2, result);
 			if (err._) {
-				vector_free(&v_params);
+				vector_free(v_params);
 				stack_restore(ss);
 				return err;
 			}
 
-			vector_free(&v_params);
+			vector_free(v_params);
 			stack_restore_add(ss, *result);
 			return MakeErrorCode(OK);
 		} else {

@@ -161,15 +161,15 @@ um_Error builtin_cons(um_Vector* v_params, um_Noun* result) {
 
 um_Error builtin_apply(um_Vector* v_params, um_Noun* result) {
 	um_Noun fn;
-	um_Vector v;
+	um_Vector* v;
 	um_Error err;
 
 	if (v_params->size != 2) { return MakeErrorCode(ERROR_ARGS); }
 
 	fn = v_params->data[0];
-	noun_to_vector(v_params->data[1], &v);
-	err = apply(fn, &v, result);
-	vector_free(&v);
+	v = noun_to_vector(v_params->data[1]);
+	err = apply(fn, v, result);
+	vector_free(v);
 	return err;
 }
 
@@ -258,17 +258,17 @@ um_Error builtin_macex(um_Vector* v_params, um_Noun* result) {
 }
 
 um_Error builtin_vector(um_Vector* v_params, um_Noun* result) {
-	um_Vector v;
+	um_Vector* v = vector_new();
 	size_t i;
 
-	vector_new(&v);
+
 	for (i = 0; i < v_params->size; i++) {
 		if (!isnil(v_params->data[i])) {
-			vector_add(&v, v_params->data[i]);
+			vector_add(v, v_params->data[i]);
 		}
 	}
 
-	*result = new_vector(&v);
+	*result = new_vector(v);
 	return MakeErrorCode(OK);
 }
 

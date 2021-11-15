@@ -261,13 +261,13 @@ um_Result um_load_file(const char* path);
 void um_init();
 void um_repl();
 um_Result um_interpret_string(const char* text);
-void vector_new(um_Vector* a);
+um_Vector *vector_new(void);
 
 void vector_add(um_Vector* a, um_Noun item);
 void vector_clear(um_Vector* a);
 void vector_free(um_Vector* a);
-void noun_to_vector(um_Noun a, um_Vector* v);
-um_Noun vector_to_noun(um_Vector* a, size_t start);
+um_Vector *noun_to_vector(um_Noun a);
+um_Noun vector_to_noun(um_Vector *a, size_t start);
 
 void stack_add(um_Noun a);
 void stack_restore(int saved_size);

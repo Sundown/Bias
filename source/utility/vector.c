@@ -1,9 +1,12 @@
 #include "../global.h"
 
-void vector_new(um_Vector* a) {
-	a->capacity = sizeof(a->static_data) / sizeof(a->static_data[0]);
-	a->size = 0;
-	a->data = a->static_data;
+um_Vector* vector_new(void) {
+	um_Vector* v = calloc(1, sizeof(um_Vector));
+	v->capacity = sizeof(v->static_data) / sizeof(v->static_data[0]);
+	v->size = 0;
+	v->data = v->static_data;
+
+	return v;
 }
 
 void vector_add(um_Vector* a, um_Noun item) {
@@ -32,9 +35,11 @@ void vector_free(um_Vector* a) {
 	if (a->data != a->static_data) free(a->data);
 }
 
-void noun_to_vector(um_Noun a, um_Vector* v) {
-	vector_new(v);
+um_Vector* noun_to_vector(um_Noun a) {
+	um_Vector* v = vector_new();
 	for (; !isnil(a); a = cdr(a)) { vector_add(v, car(a)); }
+
+	return v;
 }
 
 um_Noun vector_to_noun(um_Vector* a, size_t start) {
